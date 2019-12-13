@@ -3,7 +3,7 @@
         <div class="col-xl-12 main-title">
             <h4>FabricJS In Angular 8 </h4>
             <h5>Github: <a href="https://github.com/nasiruddin-saiyed/angular-editor-fabric-js">nasiruddin-saiyed/angular-editor-fabric-js</a></h5>
-            <h5>Github Fork: <a href="https://github.com/kevoj/angular-editor-fabric-js">kevoj/angular-editor-fabric-js</a></h5>
+            <!-- <h5>Github Fork: <a href="https://github.com/kevoj/angular-editor-fabric-js">kevoj/angular-editor-fabric-js</a></h5> -->
         </div>
         <div class="col-xl-12">
             <div class="row">
@@ -70,25 +70,39 @@
             </div>
             <br/>
             <div class="card">
-                <div class="card-header">Add images</div>
+                <div class="card-header">Add Product</div>
                 <div class="card-body max-height">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/pikachu.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/squirtle.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/bullbasaur.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/charmander.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/bellsprout.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/caterpie.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/dratini.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/eevee.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/jigglypuff.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/mankey.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/meowth.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/pidgey.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/psyduck.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/rattata.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/abra.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/snorlax.png">
-                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/zubat.png">
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/back-tank-top_css.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/back-unisex-sweatshirt_css.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/front-tank-top_css.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/front-unisex-sweatshirt_css.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/hoodie-2019_back_css_1.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/hoodie-2019_front_css_1.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/man_basic_back_css_4.png"/>
+                    <img class="images-product-item" width="80" (click)="getBgImg($event)" src="assets/ShirteeProducts/man_basic_front_css_4.png"/>
+                </div>
+            </div>
+            <br/>
+            <div class="card">
+                <div class="card-header">Add clipart</div>
+                <div class="card-body max-height">
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/pikachu.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/squirtle.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/bullbasaur.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/charmander.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/bellsprout.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/caterpie.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/dratini.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/eevee.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/jigglypuff.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/mankey.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/meowth.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/pidgey.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/psyduck.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/rattata.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/abra.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/snorlax.png"/>
+                    <img class="images-item" (click)="getImgPolaroid($event)" src="assets/png/zubat.png"/>
                 </div>
             </div>
             <br/>
@@ -155,7 +169,7 @@
             <div class="card" *ngIf="!selected">
                 <div class="card-header">Canvas</div>
                 <div class="card-body">
-                    <div class="custom-item" *ngIf="!props.canvasImage">
+                    <div class="custom-item"><!-- *ngIf="!props.canvasImage" -->
                         <div class="custom-item-title">Background Color</div>
                         <div class="custom-item-body">
                             <input type="text" class="form-control" [cpPosition]="'bottom'" [(colorPicker)]="props.canvasFill" [style.background]="props.canvasFill"

@@ -13,8 +13,8 @@ export class AppComponent {
 
     private canvas: any;
     private props: any = {
-        canvasFill: '#ffffff',
-        canvasImage: '',
+        canvasFill: '#00000',
+        canvasImage: 'assets/ShirteeProducts/man_basic_front_css_4.png',
         id: null,
         opacity: null,
         fill: null,
@@ -32,7 +32,7 @@ export class AppComponent {
     private url: string | any = '';
     private size: any = {
         width: 500,
-        height: 800
+        height: 500
     };
 
     private json: any;
@@ -109,6 +109,8 @@ export class AppComponent {
         // let canvasElement: any = document.getElementById('canvas');
         // console.log(canvasElement)
         // });
+        this.setCanvasImage();
+        this.setCanvasFill();
 
     }
 
@@ -250,10 +252,10 @@ export class AppComponent {
     }
 
     setCanvasFill() {
-        if (!this.props.canvasImage) {
-            this.canvas.backgroundColor = this.props.canvasFill;
-            this.canvas.renderAll();
-        }
+        // if (!this.props.canvasImage) {
+        this.canvas.backgroundColor = this.props.canvasFill;
+        this.canvas.renderAll();
+        // }
     }
 
     extend(obj, id) {
@@ -266,12 +268,38 @@ export class AppComponent {
         })(obj.toObject);
     }
 
+    getBgImg(event: any) {
+        let el = event.target;
+        let self = this;
+        fabric.Image.fromURL(el.src, (img) => {
+            this.props.canvasImage = el.src;
+            self.canvas.setBackgroundImage(img, self.canvas.renderAll.bind(self.canvas), {
+                scaleX: self.canvas.width / img.width,
+                scaleY: self.canvas.height / img.height
+            });
+            if (self.props.canvasFill) {
+                self.canvas.backgroundColor = self.props.canvasFill;
+            } else {
+                self.canvas.backgroundColor = '#00000';
+            }
+        });
+    }
     setCanvasImage() {
         let self = this;
         if (this.props.canvasImage) {
-            this.canvas.setBackgroundColor({ source: this.props.canvasImage, repeat: 'repeat' }, function () {
-                // self.props.canvasFill = '';
-                self.canvas.renderAll();
+            fabric.Image.fromURL(this.props.canvasImage, function (img) {
+                // add background image
+                self.canvas.setBackgroundImage(img, self.canvas.renderAll.bind(self.canvas), {
+                    scaleX: self.canvas.width / img.width,
+                    scaleY: self.canvas.height / img.height
+                });
+                if (self.props.canvasFill) {
+                    self.canvas.backgroundColor = self.props.canvasFill;
+                } else {
+                    self.canvas.backgroundColor = '#00000';
+                }
+            }.bind(this), {
+                crossOrigin: 'anonymous'
             });
         }
     }
@@ -528,17 +556,17 @@ export class AppComponent {
     }
 
     rasterize() {
-        if (!fabric.Canvas.supports('toDataURL')) {
-            alert('This browser doesn\'t provide means to serialize canvas to an image');
-        }
-        else {
-            console.log(this.canvas.toDataURL('png'))
-            //window.open(this.canvas.toDataURL('png'));
-            var image = new Image();
-            image.src = this.canvas.toDataURL('png')
-            var w = window.open("");
-            w.document.write(image.outerHTML);
-        }
+        // if (!fabric.Canvas.supports('toDataURL')) {
+        //     alert('This browser doesn\'t provide means to serialize canvas to an image');
+        // }
+        // else {
+        console.log(this.canvas.toDataURL('png'))
+        //window.open(this.canvas.toDataURL('png'));
+        var image = new Image();
+        image.src = this.canvas.toDataURL('png')
+        var w = window.open("");
+        w.document.write(image.outerHTML);
+        // }
     }
 
     rasterizeSVG() {
