@@ -35,6 +35,8 @@ export class AppComponent {
 		// Canvas Size
 		width: 500, // in pixel
 		height: 500, // in pixel
+		ratio: 1,
+		dpi: 72, // in ppi // Canvas Acctual DPI which is created by canvas.toDataURL()
 
 		// Canvas Printing Size
 		canvasPrintWidth: 50, // in mm
@@ -50,7 +52,7 @@ export class AppComponent {
 
 	private textString: string;
 	private url: string | any = '';
-	
+
 
 	private json: any;
 	private globalEditor: boolean = false;
@@ -80,14 +82,41 @@ export class AppComponent {
 	constructor() { }
 
 	calculateCanvasSize() {
-		this.size.width = parseFloat(`${this.size.canvasPrintWidth * this.canvasPixelPerMillimeret}`).toFixed(2);		
-		this.size.height = parseFloat(`${this.size.canvasPrintHeight * this.canvasPixelPerMillimeret}`).toFixed(2);		
+		// this.size.width = parseFloat(`${this.size.canvasPrintWidth * this.canvasPixelPerMillimeret}`).toFixed(2);		
+		// this.size.height = parseFloat(`${this.size.canvasPrintHeight * this.canvasPixelPerMillimeret}`).toFixed(2);		
 	}
 
-	updatePrintAreaInCanvas(){
-		let print_area = (this.canvas.getObjects() || []).find(o => o.clipName == this.printAreaConfig.clipName);
-		print_area.set(this.printAreaConfig);
-		this.canvas.renderAll();
+	updatePrintAreaConfig(selectedObject){
+		if (selectedObject && selectedObject.clipName == "print_area") {
+			this.printAreaConfig = {
+				...this.printAreaConfig,
+				left: parseInt(selectedObject.left),
+				top: parseInt(selectedObject.top),
+				width: parseInt(`${selectedObject.width * selectedObject.scaleX}`),
+				height:parseInt(`${selectedObject.height * selectedObject.scaleY}`),
+				angle: selectedObject.angle,
+			}
+		}
+	}
+
+	updatePrintAreaInCanvas() {
+		// let print_area = (this.canvas.getObjects() || []).find(o => o.clipName == this.printAreaConfig.clipName);
+		// print_area.set(this.printAreaConfig);
+		// this.canvas.item(0).setHeight(this.printAreaConfig.height);
+		// this.canvas.item(0).setWidth(this.printAreaConfig.width);
+		// this.canvas.item(0).setScaleX(1);
+		// this.canvas.item(0).setScaleY(1);
+		// this.canvas.item(0).setCoords();
+		// console.log(this.canvas.item(0));
+
+		// this.canvas.renderAll();
+		this.printArea.set('top', parseInt(this.printAreaConfig.top, 10)).setCoords();
+		this.printArea.set('left', parseInt(this.printAreaConfig.left, 10)).setCoords();
+		this.printArea.set('height', parseInt(this.printAreaConfig.height, 10)).setCoords();
+		this.printArea.set('width', parseInt(this.printAreaConfig.width, 10)).setCoords();
+		this.canvas.requestRenderAll();
+		let calculateRation:any = this.printAreaConfig.width / this.printAreaConfig.height;
+		this.printAreaConfig.ratio = parseFloat(calculateRation).toFixed(2)
 
 	}
 
@@ -113,55 +142,84 @@ export class AppComponent {
 		});
 		fabric.Object.prototype.transparentCorners = false;
 
+		this.printArea = new fabric.Rect({
+			left: this.printAreaConfig.left,
+			top: this.printAreaConfig.top,
+			width: this.printAreaConfig.width,
+			height: this.printAreaConfig.height,
+			fill: this.printAreaConfig.fill,
+			stroke: this.printAreaConfig.stroke,
+			strokeWidth: this.printAreaConfig.strokeWidth,
+			clipName: this.printAreaConfig.clipName,
+		});
+
 		this.loadCanvasSizeConfiguration();
 
-		// this.canvas.on({
-		// 	'object:moving': (e) => { },
-		// 	'object:modified': (e) => { },
-		// 	'object:selected': (e) => {
+		this.canvas.on({
+			'object:moving': (e) => {
+				let selectedObject = e.target;
+				switch (selectedObject.clipName) {
+					case "print_area":
+						this.updatePrintAreaConfig(selectedObject);
+						break;				
+					default:
+						break;
+				}
+			},
+			'object:modified': (e) => {
+				let selectedObject = e.target;
+				switch (selectedObject.clipName) {
+					case "print_area":
+						this.updatePrintAreaConfig(selectedObject);
+						break;				
+					default:
+						break;
+				}
+			},
+			'object:selected': (e) => {
 
-		// 		let selectedObject = e.target;
-		// 		this.selected = selectedObject
-		// 		selectedObject.hasRotatingPoint = true;
-		// 		selectedObject.transparentCorners = false;
-		// 		// selectedObject.cornerColor = 'rgba(255, 87, 34, 0.7)';
+				// let selectedObject = e.target;
+				// this.selected = selectedObject
+				// selectedObject.hasRotatingPoint = true;
+				// selectedObject.transparentCorners = false;
+				// // selectedObject.cornerColor = 'rgba(255, 87, 34, 0.7)';
 
-		// 		this.resetPanels();
+				// this.resetPanels();
 
-		// 		if (selectedObject.type !== 'group' && selectedObject) {
+				// if (selectedObject.type !== 'group' && selectedObject) {
 
-		// 			this.getId();
-		// 			this.getOpacity();
+				// 	this.getId();
+				// 	this.getOpacity();
 
-		// 			switch (selectedObject.type) {
-		// 				case 'rect':
-		// 				case 'circle':
-		// 				case 'triangle':
-		// 					this.figureEditor = true;
-		// 					this.getFill();
-		// 					break;
-		// 				case 'i-text':
-		// 					this.textEditor = true;
-		// 					this.getLineHeight();
-		// 					this.getCharSpacing();
-		// 					this.getBold();
-		// 					this.getFontStyle();
-		// 					this.getFill();
-		// 					this.getTextDecoration();
-		// 					this.getTextAlign();
-		// 					this.getFontFamily();
-		// 					break;
-		// 				case 'image':
-		// 					console.log('image');
-		// 					break;
-		// 			}
-		// 		}
-		// 	},
-		// 	'selection:cleared': (e) => {
-		// 		this.selected = null;
-		// 		this.resetPanels();
-		// 	}
-		// });
+				// 	switch (selectedObject.type) {
+				// 		case 'rect':
+				// 		case 'circle':
+				// 		case 'triangle':
+				// 			this.figureEditor = true;
+				// 			this.getFill();
+				// 			break;
+				// 		case 'i-text':
+				// 			this.textEditor = true;
+				// 			this.getLineHeight();
+				// 			this.getCharSpacing();
+				// 			this.getBold();
+				// 			this.getFontStyle();
+				// 			this.getFill();
+				// 			this.getTextDecoration();
+				// 			this.getTextAlign();
+				// 			this.getFontFamily();
+				// 			break;
+				// 		case 'image':
+				// 			console.log('image');
+				// 			break;
+				// 	}
+				// }
+			},
+			'selection:cleared': (e) => {
+				// this.selected = null;
+				// this.resetPanels();
+			}
+		});
 
 		// this.canvas.setWidth(this.size.width);
 		// this.canvas.setHeight(this.size.height);
@@ -179,19 +237,10 @@ export class AppComponent {
 	}
 
 	loadInitialPrintArea() {
-		this.printArea = new fabric.Rect({
-			left: this.printAreaConfig.left,
-			top: this.printAreaConfig.top,
-			width: this.printAreaConfig.width,
-			height: this.printAreaConfig.height,
-			fill: this.printAreaConfig.fill,
-			stroke: this.printAreaConfig.stroke,
-			strokeWidth: this.printAreaConfig.strokeWidth,
-			clipName: this.printAreaConfig.clipName,
-		});
+
 		this.extend(this.printArea, this.randomId());
 		this.canvas.add(this.printArea);
-		this.canvas.item(0).selectable = false;
+		// this.canvas.item(0).selectable = false;
 	}
 
 	/*--------------------------Design Cliping Calculation-------------------------*/
@@ -201,9 +250,9 @@ export class AppComponent {
 	}
 
 	clip_name(name) {
-		return _(this.canvas.getObjects()).where({
+		return _.find(this.canvas.getObjects(), {
 			clipFor: name
-		}).first()
+		})
 	}
 
 	clip(ctx, _this) {
@@ -257,10 +306,10 @@ export class AppComponent {
 
 	//Block "Size"
 
-	changeAreaSize(event: any) {
-		// this.canvas.setWidth(this.size.width);
-		// this.canvas.setHeight(this.size.height);
-	}
+	// changeAreaSize(event: any) {
+	// 	this.canvas.setWidth(this.size.width);
+	// 	this.canvas.setHeight(this.size.height);
+	// }
 
 
 	/*------------------------Block elements------------------------*/
@@ -270,6 +319,9 @@ export class AppComponent {
 	changeSize(event: any) {
 		this.canvas.setWidth(this.size.width);
 		this.canvas.setHeight(this.size.height);
+		let calculateRation:any = this.size.width / this.size.height;
+		this.size.ratio = parseFloat(calculateRation).toFixed(2);
+		this.setCanvasImage();
 	}
 
 	//Block "Add text"
@@ -362,11 +414,10 @@ export class AppComponent {
 			case 'rectangle':
 				add = new fabric.Rect({
 					...this.printAreaConfig,
+					width: 100,
+					height: 100,
 					clipName: this.randomId(),
-					fill: '#3f51b5',
-					clipTo: (ctx) => {
-						return classScope.clip(ctx, add)
-					}
+					fill: '#3f51b5'
 				});
 				break;
 			case 'square':
@@ -387,7 +438,12 @@ export class AppComponent {
 				break;
 		}
 		this.extend(add, this.randomId());
-		console.log(add);		
+		add.set({
+			clipTo: (ctx) => {
+				return this.clip(ctx, add)
+			}
+		})
+		console.log(add);
 		this.printArea.set({
 			clipFor: add.clipName
 		});
@@ -717,10 +773,10 @@ export class AppComponent {
 		//     alert('This browser doesn\'t provide means to serialize canvas to an image');
 		// }
 		// else {
-		console.log(this.canvas.toDataURL('png'))
+		console.log(this.canvas.toDataURL('jpg'))
 		//window.open(this.canvas.toDataURL('png'));
 		var image = new Image();
-		image.src = this.canvas.toDataURL('png')
+		image.src = this.canvas.toDataURL('jpg')
 		var w = window.open("");
 		w.document.write(image.outerHTML);
 		// }
