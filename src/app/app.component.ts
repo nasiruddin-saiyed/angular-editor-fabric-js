@@ -39,9 +39,9 @@ export class AppComponent {
 		dpi: 72, // in ppi // Canvas Acctual DPI which is created by canvas.toDataURL()
 
 		// Canvas Printing Size
-		canvasPrintWidth: 50, // in mm
-		canvasPrintHeight: 50, // in mm
-		canvasPrintRatio: 1,
+		canvasPrintWidth: 150, // in mm
+		canvasPrintHeight: 120, // in mm
+		canvasPrintRatio: 1.25,
 		canvasPrintDPI: 300, // in ppi // Canvas Output DPI which is required
 
 
@@ -81,7 +81,11 @@ export class AppComponent {
 
 	constructor() { }
 
-	calculateCanvasSize() {
+	calculateCanvasSizeRatio() {
+
+		let calculateRatio:any = this.size.canvasPrintWidth / this.size.canvasPrintHeight;
+		this.size.canvasPrintRatio = parseFloat(calculateRatio).toFixed(2)
+
 		// this.size.width = parseFloat(`${this.size.canvasPrintWidth * this.canvasPixelPerMillimeret}`).toFixed(2);		
 		// this.size.height = parseFloat(`${this.size.canvasPrintHeight * this.canvasPixelPerMillimeret}`).toFixed(2);		
 	}
@@ -96,6 +100,8 @@ export class AppComponent {
 				height:parseInt(`${selectedObject.height * selectedObject.scaleY}`),
 				angle: selectedObject.angle,
 			}
+			let calculateRatio:any = this.printAreaConfig.width / this.printAreaConfig.height;
+			this.printAreaConfig.ratio = parseFloat(calculateRatio).toFixed(2)
 		}
 	}
 
@@ -115,8 +121,8 @@ export class AppComponent {
 		this.printArea.set('height', parseInt(this.printAreaConfig.height, 10)).setCoords();
 		this.printArea.set('width', parseInt(this.printAreaConfig.width, 10)).setCoords();
 		this.canvas.requestRenderAll();
-		let calculateRation:any = this.printAreaConfig.width / this.printAreaConfig.height;
-		this.printAreaConfig.ratio = parseFloat(calculateRation).toFixed(2)
+		let calculateRatio:any = this.printAreaConfig.width / this.printAreaConfig.height;
+		this.printAreaConfig.ratio = parseFloat(calculateRatio).toFixed(2)
 
 	}
 
@@ -132,7 +138,7 @@ export class AppComponent {
 	}
 
 	ngOnInit() {
-		this.calculateCanvasSize();
+		// this.calculateCanvasSize();
 
 		//setup front side canvas
 		this.canvas = new fabric.Canvas('canvas', {
@@ -319,8 +325,8 @@ export class AppComponent {
 	changeSize(event: any) {
 		this.canvas.setWidth(this.size.width);
 		this.canvas.setHeight(this.size.height);
-		let calculateRation:any = this.size.width / this.size.height;
-		this.size.ratio = parseFloat(calculateRation).toFixed(2);
+		let calculateRatio:any = this.size.width / this.size.height;
+		this.size.ratio = parseFloat(calculateRatio).toFixed(2);
 		this.setCanvasImage();
 	}
 
